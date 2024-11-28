@@ -10,7 +10,7 @@ WTFacts is a World of Warcraft addon that delivers **random and fun facts** to e
   - Enable or disable the addon.
   - Adjust the cooldown between facts to prevent spam.
   - Set a delay for when facts are sent after events.
-  - Choose which events trigger facts.
+  - Choose which events trigger facts (COMING SOON!).
 - **Group Aware**: Sends facts to the most appropriate chat channel:
   - `INSTANCE_CHAT` for random dungeon/raid groups.
   - `RAID` for raid groups.
