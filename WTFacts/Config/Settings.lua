@@ -35,20 +35,3 @@ namespace:RegisterSettings("WTFactsDB", {
 		end,
 	},
 })
-
--- Register Callbacks for Settings
-namespace:RegisterOptionCallback("enabled", function(value)
-	if value then
-		print("|cff5bc0beWTFacts Enabled!|r")
-	else
-		print("|cff5bc0beWTFacts Disabled!|r")
-	end
-end)
-
-namespace:RegisterOptionCallback("cooldown", function(value)
-	print(string.format("|cff5bc0beWTFacts Cooldown set to %d minutes.|r", value))
-end)
-
-namespace:RegisterOptionCallback("delay", function(value)
-	print(string.format("|cff5bc0beWTFacts Message Delay set to %d seconds.|r", value))
-end)

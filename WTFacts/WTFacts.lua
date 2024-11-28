@@ -50,7 +50,7 @@ local function ShowRandomFact()
 	local randomFact = namespace.factslist[math.random(#namespace.factslist)]
 	local channel = GetChatChannel()
 
-	print(string.format("||cff5bc0be[WTFacts]: Sending fact in %d seconds...|r", delay))
+	print(string.format("|cff5bc0be[WTFacts]: Sending fact in %d seconds...|r", delay))
 	C_Timer.After(delay, function()
 		SendChatMessage("[WTFacts]: " .. randomFact, channel)
 	end)
@@ -66,6 +66,23 @@ WTFacts:RegisterEvent("PLAYER_LEVEL_UP", ShowRandomFact)
 -- Slash Command for Manual Trigger
 namespace:RegisterSlash("/wtfacts", function()
 	ShowRandomFact()
+end)
+
+-- Register Callbacks for Settings
+namespace:RegisterOptionCallback("enabled", function(value)
+	if value then
+		print("|cff5bc0beWTFacts Enabled!|r")
+	else
+		print("|cff5bc0beWTFacts Disabled!|r")
+	end
+end)
+
+namespace:RegisterOptionCallback("cooldown", function(value)
+	print(string.format("|cff5bc0beWTFacts Cooldown set to %d minutes.|r", value))
+end)
+
+namespace:RegisterOptionCallback("delay", function(value)
+	print(string.format("|cff5bc0beWTFacts Message Delay set to %d seconds.|r", value))
 end)
 
 -- On Addon Loaded
