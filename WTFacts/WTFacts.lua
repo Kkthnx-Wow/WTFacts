@@ -63,18 +63,18 @@ local function ShowRandomFact()
 		return
 	end
 
-	lastFactTime = currentTime
 	local randomFact = namespace.factslist[math_random(#namespace.factslist)]
 	local channel = GetChatChannel()
 
 	if not channel then
 		print("|cff5bc0be[WTFacts]: No valid chat channel available. You must be in a party, raid, or instance.|r")
-		return
+		return -- Exit without setting cooldown
 	end
 
 	print(string_format("|cff5bc0be[WTFacts]: Sending fact in %d seconds...|r", delay))
 	C_Timer_After(delay, function()
 		SendChatMessage("[WTFacts]: " .. randomFact, channel)
+		lastFactTime = currentTime -- Set cooldown time only after successful output
 	end)
 end
 
