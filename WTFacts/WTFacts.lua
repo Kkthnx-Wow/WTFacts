@@ -29,7 +29,8 @@ local function GetChatChannel()
 	elseif IsInGroup() then
 		return "PARTY"
 	else
-		return "SAY"
+		-- No valid chat channel available
+		return nil
 	end
 end
 
@@ -49,7 +50,6 @@ end
 -- Function to display a random fact
 local function ShowRandomFact()
 	if not namespace:GetOption("enabled") then
-		print("|cff5bc0be[WTFacts]: The addon is currently disabled.|r")
 		return
 	end
 
@@ -67,6 +67,11 @@ local function ShowRandomFact()
 	local randomFact = namespace.factslist[math_random(#namespace.factslist)]
 	local channel = GetChatChannel()
 
+	if not channel then
+		print("|cff5bc0be[WTFacts]: No valid chat channel available. You must be in a party, raid, or instance.|r")
+		return
+	end
+
 	print(string_format("|cff5bc0be[WTFacts]: Sending fact in %d seconds...|r", delay))
 	C_Timer_After(delay, function()
 		SendChatMessage("[WTFacts]: " .. randomFact, channel)
@@ -76,7 +81,7 @@ end
 -- Dynamic Event Registration
 
 local function UpdateEventRegistration()
-	WTFacts:UnregisterAllEvents()
+	WTFacts:UnregisterAllEvents(ShowRandomFact)
 
 	if namespace:GetOption("achievementEarned") then
 		WTFacts:RegisterEvent("ACHIEVEMENT_EARNED", ShowRandomFact)

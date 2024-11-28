@@ -3,7 +3,7 @@
 ## Title: |cff5bc0beWTFacts|r
 ## Notes: Displays random and surprising facts in-game!.|n|n|cff669DFFDeveloper|cffffffff:|r |nJosh "|CFF7b8489Kkthnx|r" Russell|n|n|cff009cdePayPal|r|cffffffff:|r |n|cffffffffwww.paypal.me/KkthnxTV|r|n|n|cfff96854Patreon|r|cffffffff:|r |n|cffffffffwww.patreon.com/Kkthnx|r
 ## Author: Josh "Kkthnx" Russell
-## Version: 1.0.0
+## Version: 1.0.1
 ## IconTexture: 1721029
 ## SavedVariables: WTFactsDB
 ## X-Support: TWW
@@ -18,3 +18,5 @@ Config\Facts.lua
 WTFacts.lua
 # Configuration
 Config\Settings.lua
+# About
+Config\About.lua
