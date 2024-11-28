@@ -10,5 +10,11 @@
 ## X-Curse-Project-ID: 
 ## X-Wago-ID: 
 
+# Libraries
 Libs\Dashi\embed.xml
+# Facts Database
+Config\Facts.lua
+# Addon Core
 WTFacts.lua
+# Configuration
+Config\Settings.lua
