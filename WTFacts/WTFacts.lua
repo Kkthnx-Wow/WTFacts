@@ -31,16 +31,6 @@ local function GetChatChannel()
 	end
 end
 
--- local function FormatTime(seconds)
--- 	if seconds >= 60 then
--- 		local mins = math_floor(seconds / 60)
--- 		local secs = seconds % 60
--- 		return string_format("%d min%s %d sec%s", mins, mins > 1 and "s" or "", secs, secs > 1 and "s" or "")
--- 	else
--- 		return string_format("%d sec%s", seconds, seconds > 1 and "s" or "")
--- 	end
--- end
-
 -- Main Logic
 local function ShowRandomFact()
 	if not namespace:GetOption("enabled") then
@@ -57,7 +47,6 @@ local function ShowRandomFact()
 	local timeLeft = cooldown - (currentTime - lastFactTime)
 
 	if timeLeft > 0 then
-		-- print(string_format("|cff5bc0be[WTFacts]: The addon is on cooldown. %s remaining.|r", FormatTime(timeLeft)))
 		return
 	end
 
@@ -70,7 +59,6 @@ local function ShowRandomFact()
 	end
 
 	factLock = true
-	-- print(string_format("|cff5bc0be[WTFacts]: Sending fact in %d seconds...|r", delay))
 	C_Timer_After(delay, function()
 		SendChatMessage("[WTFacts]: " .. randomFact, channel)
 		lastFactTime = currentTime
@@ -99,34 +87,6 @@ local function UpdateEventRegistration()
 	end
 end
 
--- Option Callbacks
-namespace:RegisterOptionCallback("enabled", function(value)
-	UpdateEventRegistration()
-end)
-
-namespace:RegisterOptionCallback("cooldown", function(value) end)
-namespace:RegisterOptionCallback("delay", function(value) end)
-
-namespace:RegisterOptionCallback("achievementEarned", function(value)
-	UpdateEventRegistration()
-end)
-
-namespace:RegisterOptionCallback("bossKill", function(value)
-	UpdateEventRegistration()
-end)
-
-namespace:RegisterOptionCallback("mythicPlusCompleted", function(value)
-	UpdateEventRegistration()
-end)
-
-namespace:RegisterOptionCallback("dungeonCompletion", function(value)
-	UpdateEventRegistration()
-end)
-
-namespace:RegisterOptionCallback("levelUp", function(value)
-	UpdateEventRegistration()
-end)
-
 -- Slash Command for Manual Trigger
 namespace:RegisterSlash("/wtfacts", function()
 	ShowRandomFact()
@@ -140,4 +100,31 @@ end
 -- On Player Login
 function namespace:OnLogin()
 	namespace:Defer(UpdateEventRegistration)
+
+	namespace:RegisterOptionCallback("enabled", function(value)
+		namespace:Defer(UpdateEventRegistration)
+	end)
+
+	namespace:RegisterOptionCallback("cooldown", function(value) end)
+	namespace:RegisterOptionCallback("delay", function(value) end)
+
+	namespace:RegisterOptionCallback("achievementEarned", function(value)
+		namespace:Defer(UpdateEventRegistration)
+	end)
+
+	namespace:RegisterOptionCallback("bossKill", function(value)
+		namespace:Defer(UpdateEventRegistration)
+	end)
+
+	namespace:RegisterOptionCallback("mythicPlusCompleted", function(value)
+		namespace:Defer(UpdateEventRegistration)
+	end)
+
+	namespace:RegisterOptionCallback("dungeonCompletion", function(value)
+		namespace:Defer(UpdateEventRegistration)
+	end)
+
+	namespace:RegisterOptionCallback("levelUp", function(value)
+		namespace:Defer(UpdateEventRegistration)
+	end)
 end
