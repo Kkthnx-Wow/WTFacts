@@ -1,10 +1,9 @@
--- Addon Table
 local _, namespace = ...
 
--- Cache Globals and Functions for Performance
-local math_floor = math.floor
+-- Cache Globals and Functions
+-- local math_floor = math.floor
 local math_random = math.random
-local string_format = string.format
+-- local string_format = string.format
 local C_PartyInfo_IsPartyWalkIn = C_PartyInfo.IsPartyWalkIn
 local C_Timer_After = C_Timer.After
 local IsInGroup = IsInGroup
@@ -15,12 +14,11 @@ local time = time
 
 local WTFacts = namespace:CreateFrame("Frame")
 
--- Cooldown Tracker
+-- Cooldown and Lock Tracking
 local lastFactTime = 0
+local factLock = false
 
 -- Utility Functions
-
--- Function to get the appropriate chat channel
 local function GetChatChannel()
 	if IsPartyLFG() or C_PartyInfo_IsPartyWalkIn() then
 		return "INSTANCE_CHAT"
@@ -29,27 +27,27 @@ local function GetChatChannel()
 	elseif IsInGroup() then
 		return "PARTY"
 	else
-		-- No valid chat channel available
 		return nil
 	end
 end
 
--- Function to format time
-local function FormatTime(seconds)
-	if seconds >= 60 then
-		local mins = math_floor(seconds / 60)
-		local secs = seconds % 60
-		return string_format("%d min%s %d sec%s", mins, mins > 1 and "s" or "", secs, secs > 1 and "s" or "")
-	else
-		return string_format("%d sec%s", seconds, seconds > 1 and "s" or "")
-	end
-end
+-- local function FormatTime(seconds)
+-- 	if seconds >= 60 then
+-- 		local mins = math_floor(seconds / 60)
+-- 		local secs = seconds % 60
+-- 		return string_format("%d min%s %d sec%s", mins, mins > 1 and "s" or "", secs, secs > 1 and "s" or "")
+-- 	else
+-- 		return string_format("%d sec%s", seconds, seconds > 1 and "s" or "")
+-- 	end
+-- end
 
 -- Main Logic
-
--- Function to display a random fact
 local function ShowRandomFact()
 	if not namespace:GetOption("enabled") then
+		return
+	end
+
+	if factLock then
 		return
 	end
 
@@ -59,7 +57,7 @@ local function ShowRandomFact()
 	local timeLeft = cooldown - (currentTime - lastFactTime)
 
 	if timeLeft > 0 then
-		print(string_format("|cff5bc0be[WTFacts]: The addon is on cooldown. %s remaining.|r", FormatTime(timeLeft)))
+		-- print(string_format("|cff5bc0be[WTFacts]: The addon is on cooldown. %s remaining.|r", FormatTime(timeLeft)))
 		return
 	end
 
@@ -68,18 +66,19 @@ local function ShowRandomFact()
 
 	if not channel then
 		print("|cff5bc0be[WTFacts]: No valid chat channel available. You must be in a party, raid, or instance.|r")
-		return -- Exit without setting cooldown
+		return
 	end
 
-	print(string_format("|cff5bc0be[WTFacts]: Sending fact in %d seconds...|r", delay))
+	factLock = true
+	-- print(string_format("|cff5bc0be[WTFacts]: Sending fact in %d seconds...|r", delay))
 	C_Timer_After(delay, function()
 		SendChatMessage("[WTFacts]: " .. randomFact, channel)
-		lastFactTime = currentTime -- Set cooldown time only after successful output
+		lastFactTime = currentTime
+		factLock = false
 	end)
 end
 
--- Dynamic Event Registration
-
+-- Event Registration Management
 local function UpdateEventRegistration()
 	WTFacts:UnregisterAllEvents(ShowRandomFact)
 
@@ -100,13 +99,12 @@ local function UpdateEventRegistration()
 	end
 end
 
--- Register Callbacks for Settings
+-- Option Callbacks
 namespace:RegisterOptionCallback("enabled", function(value)
 	UpdateEventRegistration()
 end)
 
 namespace:RegisterOptionCallback("cooldown", function(value) end)
-
 namespace:RegisterOptionCallback("delay", function(value) end)
 
 namespace:RegisterOptionCallback("achievementEarned", function(value)
